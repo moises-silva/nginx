@@ -433,6 +433,7 @@ ngx_http_upstream_get_round_robin_peer(ngx_peer_connection_t *pc, void *data)
     pc->sockaddr = peer->sockaddr;
     pc->socklen = peer->socklen;
     pc->name = &peer->name;
+    pc->server = &peer->server;
 
     /* ngx_unlock_mutex(peers->mutex); */
 

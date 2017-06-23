@@ -1340,6 +1340,16 @@ ngx_http_upstream_connect(ngx_http_request_t *r, ngx_http_upstream_t *u)
     }
 
     u->state->peer = u->peer.name;
+#if (NGX_HTTP_SSL)
+    u->ssl_name.data = ngx_pnalloc(r->pool, u->peer.server->len);
+    if (u->ssl_name.data == NULL) {
+        ngx_http_upstream_finalize_request(r, u,
+                                           NGX_HTTP_INTERNAL_SERVER_ERROR);
+        return;
+    }
+    u->ssl_name.len = u->peer.server->len;
+    (void) ngx_cpystrn(u->ssl_name.data, u->peer.server->data, u->ssl_name.len);
+#endif
 
     if (rc == NGX_BUSY) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "no live upstreams");
